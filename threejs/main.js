@@ -79,14 +79,13 @@ function init() {
             node.matrixAutoUpdate = false;
         }
     
-    } );
+    });
 
     stats.update();
     renderer.render(scene, camera);
 }
 
 function onWindowResize() {
-
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     /* renderer.setViewport( vpXmin, vpYmin, vpXwidth, vpYheight ); Unused */
@@ -94,22 +93,38 @@ function onWindowResize() {
     
 }
 
+function resetBot(){
+    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
+    robot.getObjectByName( "torso" ).position.x = 1;
+    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
+    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
+    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
+    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
+    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
+    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
+    // right_upper_leg.position.x = 1;   
+    // robot.right_upper_leg.position.y = -4;
+    // robot.right_lower_leg.position.y = -3.5;
+    // robot.right_foot.position.y = -2;
+}
+
 function onDocumentKeyDown(event) {
-    // One for Hand wave, Two for your Custom Animation #2 and Three - Your Custom Animation #3
-    // For now, only works for Handwave
-    
-    console.log(event.key);
-    key = parseInt(event.key);
-
-    animations = {
-        1 : WaveAnimation,
-        2 : ThrowHat,
-        3 : false,
-    };
-
-    // Run selected animation
-    animation = new animations[1]();
-    animation.run()
+    switch (event.key) {
+        case 'ArrowUp':
+            animation = new JumpAnimation();
+            animation.run();
+            break;
+        case 'ArrowRight':
+            animation = new WaveAnimation();
+            animation.run();
+            break;
+        case 'ArrowLeft':
+            animation = new RemoveHeadAnimation();
+            animation.run();
+            break;
+        default:
+            break;
+    }
 }
 
 init();

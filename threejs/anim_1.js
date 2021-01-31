@@ -4,60 +4,87 @@ Object.assign( WaveAnimation.prototype, {
 
     init: function() {
         let upperArmTween = new TWEEN.Tween( {theta:0} )
-            .to( {theta:Math.PI/2 }, 2000)
+            .to( {theta:Math.PI/2 }, 1500)
             .onUpdate(function(){
-                let right_upper_arm = robot.getObjectByName( "right_upper_arm" );
+                let right_upper_arm =  robot.getObjectByName( "right_upper_arm" );
+                let pivot = [ 0.3, 1.3, 0 ];
 
-                let [x, y, z] = [right_upper_arm.position.x, right_upper_arm.position.y, right_upper_arm.position.z];
-                let pivot = { x: 0, y: 2, z: 0 };
-
-                right_upper_arm.matrix.makeTranslation(0, 0, 0 )
-                    .premultiply( new THREE.Matrix4().makeTranslation( -pivot.x, -pivot.y, -pivot.z ) )
-                    .premultiply( new THREE.Matrix4().makeRotationZ( this._object.theta ))
-                    .premultiply( new THREE.Matrix4().makeTranslation( pivot.x, pivot.y, pivot.z))
-                    .premultiply( new THREE.Matrix4().M)
+                right_upper_arm.matrix
+                    .makeTranslation( -pivot[0], -pivot[1], -pivot[2] ) 
+                    .makeRotationZ(this._object.theta)
+                    .premultiply( new THREE.Matrix4().makeTranslation( pivot[0], pivot[1], pivot[2] ) )
+                    .premultiply( new THREE.Matrix4().makeTranslation(
+                        right_upper_arm.position.x,
+                        right_upper_arm.position.y,
+                        right_upper_arm.position.z 
+                        ) );
                
-
-
-                // Updating final world matrix (with parent transforms) - mandatory
-                right_upper_arm.updateMatrixWorld(true);
-
-                // Updating screen
+                right_upper_arm.updateMatrixWorld( true );
                 stats.update();
                 renderer.render(scene, camera);    
             });
-        // Here you may include animations for other parts 
+ 
         let lowerArmTween = new TWEEN.Tween( {theta:0} )
-            .to( {theta:Math.PI/2 }, 2000)
+            .to( {theta:Math.PI/2 }, 1000)
             .onUpdate(function(){
-                // This is an example of rotation of the right_upper_arm 
-                // Notice that the transform is M = T * R 
                 let lower_arm = robot.getObjectByName("lower_arm");
-                lower_arm.matrix.makeRotationZ(this._object.theta).premultiply( new THREE.Matrix4().makeTranslation(1, -1, 0 ) );    
-                lower_arm.updateMatrixWorld(true);
+                let pivot = [1, 1.3, 0];
 
-                // Updating screen
+                lower_arm.matrix
+                    .makeTranslation( -pivot[0], -pivot[1], -pivot[2] )
+                    .makeRotationZ(this._object.theta)
+                    .premultiply( new THREE.Matrix4().makeTranslation( pivot[0], pivot[1], pivot[2] ) ) 
+                    .premultiply( new THREE.Matrix4().makeTranslation(
+                        lower_arm.position.x,
+                        lower_arm.position.y,
+                        lower_arm.position.z 
+                        ) );
+
+                lower_arm.updateMatrixWorld(true);
                 stats.update();
                 renderer.render(scene, camera);    
             });    
         
-        let handTween = new TWEEN.Tween( {theta:0} )
-            .to( {theta:Math.PI/2 }, 2000)
+        let handTweenLeft = new TWEEN.Tween( {theta:0} )
+            .to( {theta:Math.PI/6 }, 600)
             .onUpdate(function(){
-                // This is an example of rotation of the right_upper_arm 
-                // Notice that the transform is M = T * R 
                 let hand = robot.getObjectByName("hand");
-                hand.matrix.makeRotationZ(this._object.theta).premultiply( new THREE.Matrix4().makeTranslation(Math.cos(1.57), -Math.sin(1.57), 0 ) );    
-                hand.updateMatrixWorld(true);
 
-                // Updating screen
+                hand.matrix
+                    .makeRotationZ( this._object.theta )
+                    .premultiply( new THREE.Matrix4().makeTranslation(
+                        hand.position.x,
+                        hand.position.y,
+                        hand.position.z 
+                        ));
+
+                hand.updateMatrixWorld(true);
                 stats.update();
                 renderer.render(scene, camera);    
         });
 
-        //  upperArmTween.chain( ... ); this allows other related Tween animations occur at the same time
+        let handTweenRight = new TWEEN.Tween( {theta:0} )
+            .to( {theta:-Math.PI/6 }, 600)
+            .onUpdate(function(){
+                let hand = robot.getObjectByName("hand");
+
+                hand.matrix
+                    .makeRotationZ( this._object.theta )
+                    .premultiply( new THREE.Matrix4().makeTranslation(
+                        hand.position.x,
+                        hand.position.y,
+                        hand.position.z 
+                        ));
+
+                hand.updateMatrixWorld(true);
+                stats.update();
+                renderer.render(scene, camera);    
+        });
+
         upperArmTween.chain(lowerArmTween);
-        lowerArmTween.chain(handTween);
+        lowerArmTween.chain(handTweenLeft);
+        handTweenLeft.chain(handTweenRight);
+        handTweenRight.chain(handTweenLeft);
         upperArmTween.start();       
     },
     animate: function(time) {

@@ -49,9 +49,18 @@ function gen_robot() {
     left_upper_leg.position.x = -1;
 
     // right: upper leg, leg, foot
-    var right_upper_leg = left_upper_leg.clone();
+    var right_upper_leg = gen_rect(1.5, 3.3);
+    var right_lower_leg = gen_rect(1, 4.5);
+    var right_foot = gen_rect(1.5, 0.5);
     right_upper_leg.name = "right_upper_leg";
-    right_upper_leg.position.x = 1;
+    right_lower_leg.name = "right_lower_leg";
+    right_foot.name = "right_foot";
+    right_upper_leg.add(right_lower_leg);
+    right_lower_leg.add(right_foot);
+    right_upper_leg.position.x = 1;   
+    right_upper_leg.position.y = -4;
+    right_lower_leg.position.y = -3.5;
+    right_foot.position.y = -2;
 
     // Creating hieararchy
     robot.add(torso);
