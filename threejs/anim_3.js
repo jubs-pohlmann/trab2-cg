@@ -97,6 +97,7 @@ Object.assign( JumpAnimation.prototype, {
             let JumpTween = new TWEEN.Tween( {theta:0} )
             .to( {y:0.5 }, 1000)
             .onUpdate(function(){     
+                
                 let torso = robot.getObjectByName("torso");
                 torso.matrix.premultiply( new THREE.Matrix4().makeTranslation( 0, 0.5, 0 ));
 
@@ -106,7 +107,7 @@ Object.assign( JumpAnimation.prototype, {
             });
  
         CrouchTween.chain(JumpTween);
-        JumpTween.delay(500);
+        JumpTween.delay(800);
         CrouchTween.start();       
     },
     animate: function(time) {

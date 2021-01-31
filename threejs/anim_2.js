@@ -1,7 +1,6 @@
 function RemoveHeadAnimation() {}
 
 Object.assign( RemoveHeadAnimation.prototype, {
-
     init: function() {
         let upperArmTween = new TWEEN.Tween( {theta:0} )
             .to( {theta:Math.PI }, 1500)
@@ -25,7 +24,7 @@ Object.assign( RemoveHeadAnimation.prototype, {
             });
  
         let lowerArmLeftTween = new TWEEN.Tween( {theta:0} )
-            .to( {theta:Math.PI/4 }, 1000)
+            .to( {theta:Math.PI/4 }, 800)
             .onUpdate(function(){
                 let lower_arm = robot.getObjectByName("lower_arm");
                 let pivot = [1, 0.5, 0];
@@ -46,7 +45,7 @@ Object.assign( RemoveHeadAnimation.prototype, {
             });    
         
         let lowerArmRightTween = new TWEEN.Tween( {theta:0} )
-            .to( {theta:-Math.PI/6 }, 600)
+            .to( {theta:-Math.PI/5 }, 1000)
             .onUpdate(function(){
                 let lower_arm = robot.getObjectByName("lower_arm");
                 let pivot = [-0.5, 0.5, 0];
@@ -60,32 +59,18 @@ Object.assign( RemoveHeadAnimation.prototype, {
                         lower_arm.position.y,
                         lower_arm.position.z 
                         ) );
+
+                let head = robot.getObjectByName("head");
+                head.matrix.premultiply( new THREE.Matrix4().makeTranslation( 1, 1, 0 ));
+
+                head.updateMatrixWorld(true);
                 lower_arm.updateMatrixWorld(true);
                 stats.update();
                 renderer.render(scene, camera);    
         });
 
-        let headRemoveTween = new TWEEN.Tween( {theta:0} )
-            .to( {x: 100, y: 100 }, 600)
-            .onUpdate(function(){
-                let head = robot.getObjectByName("head");
-
-                head.matrix
-                    .makeTranslation( new THREE.Matrix4().makeTranslation( this._object.x, this._object.y, 0 ) )
-                    .premultiply( new THREE.Matrix4().makeTranslation(
-                        head.position.x,
-                        head.position.y,
-                        head.position.z 
-                        ) );
-                head.updateMatrixWorld(true);
-                stats.update();
-                renderer.render(scene, camera);    
-        });
-
-
         upperArmTween.chain(lowerArmLeftTween);
         lowerArmLeftTween.chain(lowerArmRightTween);
-        lowerArmRightTween.chain(headRemoveTween);
         upperArmTween.start();       
     },
     animate: function(time) {

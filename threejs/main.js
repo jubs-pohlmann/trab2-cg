@@ -93,21 +93,6 @@ function onWindowResize() {
     
 }
 
-function resetBot(){
-    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
-    robot.getObjectByName( "torso" ).position.x = 1;
-    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
-    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
-    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
-    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
-    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
-    robot.getObjectByName( "right_upper_leg" ).position.x = 1;
-    // right_upper_leg.position.x = 1;   
-    // robot.right_upper_leg.position.y = -4;
-    // robot.right_lower_leg.position.y = -3.5;
-    // robot.right_foot.position.y = -2;
-}
-
 function onDocumentKeyDown(event) {
     switch (event.key) {
         case 'ArrowUp':
@@ -123,7 +108,7 @@ function onDocumentKeyDown(event) {
             animation.run();
             break;
         default:
-            break;
+            location.reload();
     }
 }
 
